@@ -48,7 +48,7 @@ dependencies:
   superellipse_shape: 
   iconsax: 
   fluttericon: 
-  geolocator:
+  geolocator: ^13.0.0
   # flutter_qiblah:
   flutter_svg:
   auto_size_text: ^3.0.0
