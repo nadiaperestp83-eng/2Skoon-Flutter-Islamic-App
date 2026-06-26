@@ -24,6 +24,29 @@ subprojects {
     project.layout.buildDirectory.set(newSubprojectBuildDir)
 }
 
+// ---------------------------------------
+// CORREÇÃO GLOBAL PARA TODOS OS SUBPROJETOS
+// ---------------------------------------
+subprojects {
+    afterEvaluate {
+        // Para projetos com extensão 'android'
+        extensions.findByName("android")?.let { ext ->
+            when (ext) {
+                is com.android.build.gradle.LibraryExtension -> {
+                    ext.compileSdk = 35
+                }
+                is com.android.build.gradle.AppExtension -> {
+                    ext.compileSdk = 35
+                }
+            }
+        }
+        // Define a propriedade 'flutter' para evitar erro "Could not get unknown property 'flutter'"
+        if (!ext.has("flutter")) {
+            ext.set("flutter", mapOf<String, Any>())
+        }
+    }
+}
+
 subprojects {
     project.evaluationDependsOn(":app")
 }
