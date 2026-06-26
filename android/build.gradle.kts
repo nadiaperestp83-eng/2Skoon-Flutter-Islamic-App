@@ -19,11 +19,15 @@ subprojects {
     }
 
     afterEvaluate {
-        // Garantia de compilação com SDK 35
+        // Garantia de compilação com SDK 35 e NDK fixo
+        // para plugins antigos que dependem de flutter.compileSdkVersion / flutter.ndkVersion
         if (project.hasProperty("android")) {
             val android = project.extensions.findByName("android")
             if (android is com.android.build.gradle.BaseExtension) {
                 android.compileSdkVersion(35)
+                if (android.ndkVersion.isNullOrBlank()) {
+                    android.ndkVersion = "27.0.12077973"
+                }
             }
         }
     }
