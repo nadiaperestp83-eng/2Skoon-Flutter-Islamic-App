@@ -1,10 +1,9 @@
 plugins {
-    // Versões removidas para evitar conflito com o plugin do Flutter
+    // Removemos todas as versões. O sistema usará as que já estão no classpath (8.7.3 e 2.1.0).
     id("com.android.application") apply false
     id("com.android.library") apply false
-    // Kotlin pode manter a versão, desde que seja compatível com a do seu Gradle
-    id("org.jetbrains.kotlin.android") version "1.9.22" apply false
-    id("dev.flutter.flutter-gradle-plugin") version "1.0.0" apply false
+    id("org.jetbrains.kotlin.android") apply false
+    id("dev.flutter.flutter-gradle-plugin") apply false
 }
 
 rootProject.layout.buildDirectory.set(file("../build"))
@@ -15,7 +14,7 @@ subprojects {
 
 subprojects {
     afterEvaluate {
-        // Bloco de segurança para garantir o compileSdk 35
+        // Garantia de compilação com SDK 35
         if (project.hasProperty("android")) {
             val android = project.extensions.findByName("android")
             if (android is com.android.build.gradle.BaseExtension) {
