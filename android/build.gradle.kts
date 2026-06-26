@@ -1,7 +1,8 @@
 plugins {
-    // Utilize versões compatíveis com o Android 15 (SDK 35)
-    id("com.android.application") version "8.3.2" apply false
-    id("com.android.library") version "8.3.2" apply false
+    // Versões removidas para evitar conflito com o plugin do Flutter
+    id("com.android.application") apply false
+    id("com.android.library") apply false
+    // Kotlin pode manter a versão, desde que seja compatível com a do seu Gradle
     id("org.jetbrains.kotlin.android") version "1.9.22" apply false
     id("dev.flutter.flutter-gradle-plugin") version "1.0.0" apply false
 }
@@ -14,10 +15,9 @@ subprojects {
 
 subprojects {
     afterEvaluate {
-        // Apenas force o SDK se for estritamente necessário, 
-        // mas o ideal é remover este bloco e definir no build.gradle.kts do app.
+        // Bloco de segurança para garantir o compileSdk 35
         if (project.hasProperty("android")) {
-            val android = project.extensions.getByName("android")
+            val android = project.extensions.findByName("android")
             if (android is com.android.build.gradle.BaseExtension) {
                 android.compileSdkVersion(35)
             }
