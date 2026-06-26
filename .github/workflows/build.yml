@@ -1,0 +1,47 @@
+name: Build Flutter APK
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.5' # Versão recomendada no README[reference:0]
+
+      - name: Enable desktop support (Linux)
+        run: |
+          flutter config --enable-linux-desktop
+          flutter config --enable-windows-desktop
+          flutter config --enable-macos-desktop
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate necessary files (if any)
+        run: flutter pub run build_runner build --delete-conflicting-outputs
+        continue-on-error: true
+
+      - name: Build APK
+        run: flutter build apk --release --split-per-abi
+
+      - name: Upload APKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-apks
+          path: build/app/outputs/flutter-apk/*.apk
