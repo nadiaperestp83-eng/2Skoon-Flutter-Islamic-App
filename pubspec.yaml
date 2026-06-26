@@ -68,7 +68,7 @@ dependencies:
   flutter_screenutil:
   hive:
   path_provider: ^2.1.5
-  
+  flutter_displaymode: ^0.6.0
   share_plus: ^11.0.0
   flutter_html:
   easy_localization: ^3.0.3
