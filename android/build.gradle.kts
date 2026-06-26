@@ -1,54 +1,28 @@
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath("com.android.tools.build:gradle:7.4.2")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22")
-    }
+plugins {
+    // Utilize versões compatíveis com o Android 15 (SDK 35)
+    id("com.android.application") version "8.3.2" apply false
+    id("com.android.library") version "8.3.2" apply false
+    id("org.jetbrains.kotlin.android") version "1.9.22" apply false
+    id("dev.flutter.flutter-gradle-plugin") version "1.0.0" apply false
 }
 
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-
-val newBuildDir = rootProject.layout.buildDirectory.dir("../../build").get()
-rootProject.layout.buildDirectory.set(newBuildDir)
+rootProject.layout.buildDirectory.set(file("../build"))
 
 subprojects {
-    val newSubprojectBuildDir = newBuildDir.dir(project.name)
-    project.layout.buildDirectory.set(newSubprojectBuildDir)
+    project.layout.buildDirectory.set(rootProject.layout.buildDirectory.dir(project.name))
 }
 
-// ==========================================
-// CORREÇÃO GLOBAL PARA TODOS OS PLUGINS
-// ==========================================
 subprojects {
     afterEvaluate {
-        // Define compileSdk = 35 para todos os módulos Android
-        project.extensions.findByName("android")?.let { ext ->
-            when (ext) {
-                is com.android.build.gradle.LibraryExtension -> {
-                    ext.compileSdk = 35
-                }
-                is com.android.build.gradle.AppExtension -> {
-                    ext.compileSdk = 35
-                }
+        // Apenas force o SDK se for estritamente necessário, 
+        // mas o ideal é remover este bloco e definir no build.gradle.kts do app.
+        if (project.hasProperty("android")) {
+            val android = project.extensions.getByName("android")
+            if (android is com.android.build.gradle.BaseExtension) {
+                android.compileSdkVersion(35)
             }
         }
-        // Cria a propriedade 'flutter' para evitar erro "unknown property"
-        if (!project.ext.has("flutter")) {
-            project.ext.set("flutter", mapOf<String, Any>())
-        }
     }
-}
-
-subprojects {
-    project.evaluationDependsOn(":app")
 }
 
 tasks.register<Delete>("clean") {
