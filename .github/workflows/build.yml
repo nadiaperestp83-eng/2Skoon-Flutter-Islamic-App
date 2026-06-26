@@ -22,7 +22,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'stable' # Versão recomendada no README[reference:0]
+          flutter-version: '3.22.0' # Versão recomendada no README[reference:0]
 
       - name: Enable desktop support (Linux)
         run: |
