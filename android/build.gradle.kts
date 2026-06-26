@@ -1,5 +1,4 @@
 plugins {
-    // Removemos todas as versões. O sistema usará as que já estão no classpath (8.7.3 e 2.1.0).
     id("com.android.application") apply false
     id("com.android.library") apply false
     id("org.jetbrains.kotlin.android") apply false
@@ -13,6 +12,12 @@ subprojects {
 }
 
 subprojects {
+    // ESSENCIAL: Isso resolve o erro de "Could not get unknown property 'flutter'"
+    // em plugins antigos do pub.dev
+    if (!project.extensions.extraProperties.has("flutter")) {
+        project.extensions.extraProperties.set("flutter", mapOf<String, Any>())
+    }
+
     afterEvaluate {
         // Garantia de compilação com SDK 35
         if (project.hasProperty("android")) {
